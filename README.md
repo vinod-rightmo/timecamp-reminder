@@ -12,7 +12,7 @@ Run this in Terminal to build the pinned release on your Mac, install it in your
 
 The app requires macOS 13 or later and runs on Apple silicon and Intel. If macOS prompts you to install Apple's Command Line Tools, finish the installation and run the command again. You can [review the installer](scripts/install.sh) before running it.
 
-TimeCamp Reminder enables **Launch at Login** the first time it opens. If macOS asks for approval, allow it under **System Settings → General → Login Items & Extensions**. Use the clock icon in the menu bar to change **Launch at Login** or **Play Chime**.
+Use the clock icon in the menu bar to set **Launch at Login** or **Play Chime**.
 
 ## Build
 
