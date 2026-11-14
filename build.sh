@@ -8,7 +8,7 @@ trap 'rm -rf "$build_dir"' EXIT
 app="$build_dir/TimeCamp Reminder.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp Info.plist "$app/Contents/Info.plist"
-cp AppIcon.icns Ghost.png GhostChime.wav "$app/Contents/Resources/"
+cp AppIcon.icns Ghost.png ReminderChime.wav "$app/Contents/Resources/"
 
 for arch in arm64 x86_64; do
     xcrun swiftc -O -target "$arch-apple-macosx13.0" -module-cache-path "$build_dir/cache" \

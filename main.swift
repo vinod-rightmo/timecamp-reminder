@@ -40,7 +40,7 @@ final class DoneButton: NSButton {
 final class Reminder: NSObject, NSApplicationDelegate {
     private let playChimeKey = "playChime"
 
-    private let chime = Bundle.main.url(forResource: "GhostChime", withExtension: "wav")
+    private let chime = Bundle.main.url(forResource: "ReminderChime", withExtension: "wav")
         .flatMap { NSSound(contentsOf: $0, byReference: false) }
 
     private let canvasColor = NSColor(srgbRed: 0.07, green: 0.07, blue: 0.105, alpha: 1)
