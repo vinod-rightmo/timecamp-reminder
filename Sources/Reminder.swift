@@ -1,8 +1,9 @@
 import AppKit
 import ServiceManagement
 
-final class Reminder: NSObject, NSApplicationDelegate {
+final class Reminder: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private let playChimeKey = "playChime"
+    private let loginConfiguredKey = "loginConfigured"
 
     private let chime = Bundle.main.url(forResource: "ReminderChime", withExtension: "wav")
         .flatMap { NSSound(contentsOf: $0, byReference: false) }
@@ -21,6 +22,7 @@ final class Reminder: NSObject, NSApplicationDelegate {
         UserDefaults.standard.register(defaults: [playChimeKey: true])
         chime?.volume = 0.65
 
+        configureLogin()
         addStatusMenu()
         observeSession()
         returnedToMac()
@@ -270,6 +272,29 @@ final class Reminder: NSObject, NSApplicationDelegate {
         let enabled = !UserDefaults.standard.bool(forKey: playChimeKey)
         UserDefaults.standard.set(enabled, forKey: playChimeKey)
         item.state = enabled ? .on : .off
+    }
+
+    private func configureLogin() {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: loginConfiguredKey) else { return }
+
+        let login = SMAppService.mainApp
+        defaults.set(true, forKey: loginConfiguredKey)
+        guard login.status != .enabled, login.status != .requiresApproval else { return }
+
+        do {
+            try login.register()
+        } catch {
+            NSLog("Could not register TimeCamp Reminder at login: %@", error.localizedDescription)
+        }
+    }
+
+    func validateMenuItem(_ item: NSMenuItem) -> Bool {
+        if item.action == #selector(toggleLogin(_:)) {
+            item.state = SMAppService.mainApp.status == .enabled ? .on : .off
+        }
+
+        return true
     }
 
     @objc private func toggleLogin(_ item: NSMenuItem) {
