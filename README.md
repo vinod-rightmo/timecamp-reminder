@@ -4,28 +4,24 @@ A small macOS menu bar app that reminds you to log time in TimeCamp after login,
 
 ## Install
 
-1. Download **TimeCamp-Reminder.zip** from [Releases](https://github.com/vinod-rightmo/timecamp-reminder/releases/latest).
-2. Unzip it and move **TimeCamp Reminder.app** to **Applications**. If you are updating, quit the old copy and choose **Replace** when Finder asks.
-3. Open the app. Use its clock menu bar icon to turn on **Launch at Login** or toggle **Play Chime**.
-
-The app requires macOS 13 or later and runs on Apple silicon and Intel Macs. It reminds you to log time manually in TimeCamp.
-
-## Install with Homebrew
-
-The tap and release ZIP are private. Update Homebrew and sign in with a GitHub account that can read this repository.
-
 ```sh
-gh auth login --hostname github.com
-gh auth setup-git --hostname github.com
-brew tap vinod-rightmo/timecamp-reminder https://github.com/vinod-rightmo/timecamp-reminder.git
-brew trust --cask vinod-rightmo/timecamp-reminder/timecamp-reminder
-HOMEBREW_GITHUB_API_TOKEN="$(gh auth token --hostname github.com)" brew install --cask vinod-rightmo/timecamp-reminder/timecamp-reminder
+brew install --cask vinod-rightmo/tap/timecamp-reminder
 ```
 
-If the same version is already in Applications, add `--adopt` to the install command. To upgrade, run `brew update`, then use the same token prefix with `brew upgrade --cask vinod-rightmo/timecamp-reminder/timecamp-reminder`.
+Open **TimeCamp Reminder** from Applications. The clock icon in the menu bar has **Launch at Login** and **Play Chime** controls. For a manual install, use the ZIP from the [public release](https://github.com/vinod-rightmo/homebrew-tap/releases/latest).
 
-When publishing a new release, update the cask's version, GitHub release asset ID, and ZIP checksum.
+The app requires macOS 13 or later and runs on Apple silicon and Intel Macs. See the [public tap](https://github.com/vinod-rightmo/homebrew-tap) for first launch and upgrade instructions.
 
 ## Build
 
 With the Xcode Command Line Tools installed, run `sh build.sh` from the repository root. The script creates `TimeCamp Reminder.zip` with a universal app bundle.
+
+## Release
+
+On a Mac with the Xcode Command Line Tools and GitHub CLI, sign in to GitHub and run `gh auth setup-git --hostname github.com` once. Your account needs write access to this repository and the public tap.
+
+1. Bump both version fields in `Info.plist`, commit the release changes, and push to `main`.
+2. Write the release notes in a Markdown file. These notes will be public.
+3. Run `sh release.sh /path/to/release-notes.md`.
+
+The script builds and verifies the universal ZIP, creates the private release, mirrors its ZIP to the public release, and updates the tap's cask version and checksum. If a publication step fails, rerun the same command. Existing release assets are reused and verified. Users get the update with `brew update` and `brew upgrade --cask vinod-rightmo/tap/timecamp-reminder`.
