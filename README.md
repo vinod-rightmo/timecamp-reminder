@@ -17,7 +17,7 @@ The app requires macOS 13 or later and runs on Apple silicon and Intel Macs. See
 Run this in Terminal to build the pinned release on your Mac and install it in your personal Applications folder. This uses Apple's Command Line Tools and needs no Homebrew or GitHub account.
 
 ```sh
-installer="$(curl -fsSL https://raw.githubusercontent.com/vinod-rightmo/timecamp-reminder/main/scripts/install.sh)" && /bin/sh -c "$installer"
+/bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/vinod-rightmo/timecamp-reminder/HEAD/scripts/install.sh)"
 ```
 
 If macOS prompts you to install the Command Line Tools, let the installation finish and rerun the command. You can [review the installer](scripts/install.sh) before running it. This installs a local build while leaving macOS security settings in place.
