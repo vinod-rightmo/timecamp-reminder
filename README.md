@@ -14,14 +14,18 @@ The app requires macOS 13 or later and runs on Apple silicon and Intel Macs. See
 
 ## Build
 
-With the Xcode Command Line Tools installed, run `sh build.sh` from the repository root. The script creates `TimeCamp Reminder.zip` with a universal app bundle.
+With the Xcode Command Line Tools installed, run `sh scripts/build.sh` from the repository root. The script creates `dist/TimeCamp Reminder.zip` with a universal app bundle.
+
+- `Sources/` contains the AppKit entry point, reminder, and controls.
+- `Resources/` contains the app icon, artwork, chime, and bundle metadata.
+- `scripts/` contains the build and release commands.
 
 ## Release
 
 On a Mac with the Xcode Command Line Tools and GitHub CLI, sign in to GitHub and run `gh auth setup-git --hostname github.com` once. Your account needs write access to this repository and the public tap.
 
-1. Bump both version fields in `Info.plist`, commit the release changes, and push to `main`.
+1. Bump both version fields in `Resources/Info.plist`, commit the release changes, and push to `main`.
 2. Write the release notes in a Markdown file. These notes will be public.
-3. Run `sh release.sh /path/to/release-notes.md`.
+3. Run `sh scripts/release.sh /path/to/release-notes.md`.
 
-The script builds and verifies the universal ZIP, creates the private release, mirrors its ZIP to the public release, and updates the tap's cask version and checksum. If a publication step fails, rerun the same command. Existing release assets are reused and verified. Users get the update with `brew update` and `brew upgrade --cask vinod-rightmo/tap/timecamp-reminder`.
+The script builds and verifies the universal ZIP, publishes it to the source and tap releases, and updates the tap's cask version and checksum. If a publication step fails, rerun the same command. The script reuses and verifies existing release assets. Users get the update with `brew update` and `brew upgrade --cask vinod-rightmo/tap/timecamp-reminder`.

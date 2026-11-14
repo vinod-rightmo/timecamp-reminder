@@ -11,13 +11,13 @@ fail() {
     exit 1
 }
 
-[ "$#" -eq 1 ] && [ -f "$notes" ] || fail "Usage: sh release.sh <release-notes.md>"
-cd "$(dirname "$0")"
+[ "$#" -eq 1 ] && [ -f "$notes" ] || fail "Usage: sh scripts/release.sh <release-notes.md>"
+cd "$(dirname "$0")/.."
 
 source_repo=vinod-rightmo/timecamp-reminder
 tap_repo=vinod-rightmo/homebrew-tap
 asset=TimeCamp-Reminder.zip
-version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Info.plist)"
+version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)"
 tag="v$version"
 commit="$(git rev-parse HEAD)"
 
@@ -53,8 +53,8 @@ else
     source_published=false
     mkdir "$work/source"
     git archive "$commit" | tar -x -C "$work/source"
-    sh "$work/source/build.sh"
-    mv "$work/source/TimeCamp Reminder.zip" "$work/$asset"
+    sh "$work/source/scripts/build.sh"
+    mv "$work/source/dist/TimeCamp Reminder.zip" "$work/$asset"
 fi
 
 ditto -x -k "$work/$asset" "$work/verified"
@@ -78,7 +78,7 @@ fi
 public_checksum="$(gh api "repos/$tap_repo/releases/tags/$tag" \
     --jq ".assets[] | select(.name == \"$asset\") | .digest")"
 [ "$public_checksum" = "sha256:$checksum" ] ||
-    fail "The public release asset does not match the private release."
+    fail "The tap release asset does not match the source release."
 
 sed -i '' -e "s/^  version .*/  version \"$version\"/" \
     -e "s/^  sha256 .*/  sha256 \"$checksum\"/" "$cask"
