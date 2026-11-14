@@ -27,8 +27,8 @@ if ! xcrun --find swiftc >/dev/null 2>&1; then
 fi
 
 repository='https://github.com/vinod-rightmo/timecamp-reminder.git'
-version='v1.0.0'
-revision='f1dceb15bb6ccfb1a3157607897ecc77b6cc6acd'
+version='v1.0.1'
+revision='a9b64c6667db1a33e09eedee706a3e4deb58e750'
 
 mkdir -p "$applications"
 work="$(mktemp -d "$applications/.timecamp-install.XXXXXX")"
