@@ -22,12 +22,13 @@ tag="v$version"
 commit="$(git rev-parse HEAD)"
 
 [ -z "$(git status --porcelain)" ] || fail "Commit the release changes first."
-[ "$(gh api "repos/$source_repo/commits/main" --jq .sha)" = "$commit" ] ||
+remote_commit="$(gh api "repos/$source_repo/commits/main" --jq .sha)"
+[ "$remote_commit" = "$commit" ] ||
     fail "Push this commit to main before releasing."
 
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
-gh repo clone "$tap_repo" "$work/tap" -- --quiet
+git clone --quiet "https://github.com/$tap_repo.git" "$work/tap"
 cask="$work/tap/Casks/timecamp-reminder.rb"
 published_version="$(awk -F '"' '/^  version / { print $2 }' "$cask")"
 [ "$(printf '%s\n' "$published_version" "$version" | sort -V | tail -n 1)" = "$version" ] ||
@@ -74,7 +75,7 @@ if ! release_exists "$tap_repo"; then
         --title "TimeCamp Reminder $version" --notes-file "$notes"
 fi
 
-public_checksum="$(gh release view "$tag" --repo "$tap_repo" --json assets \
+public_checksum="$(gh api "repos/$tap_repo/releases/tags/$tag" \
     --jq ".assets[] | select(.name == \"$asset\") | .digest")"
 [ "$public_checksum" = "sha256:$checksum" ] ||
     fail "The public release asset does not match the private release."
